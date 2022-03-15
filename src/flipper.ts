@@ -189,10 +189,10 @@ export default class Flipper {
     // Get relevant paths
     const baseFolder: string = this.getDirectoryPath("original");
     const tokenMetadataPath: string = `${baseFolder}/${tokenId}.json`;
-    const tokenImagePath: string = `${baseFolder}/images/${tokenId}.png`;
+    const tokenImagePath: string = `${baseFolder}/images/${tokenId}.bin`;
 
     // Write metadata to JSON file
-    await fs.writeFileSync(tokenMetadataPath, JSON.stringify(metadata));
+    await fs.writeFileSync(tokenMetadataPath, JSON.stringify(metadata, null, "\t"));
 
     // If image details exist in retrieved metadata
     if (metadata["image"]) {

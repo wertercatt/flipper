@@ -21,7 +21,7 @@ export function collectURILocation(URI: string): {
   const isIPFS = URI.match(IPFSRegex);
   if (isIPFS) {
     // If so, return truncated IPFS URI
-    return { loc: URILocation.IPFS, URI: isIPFS[0] };
+    return { loc: URILocation.IPFS, URI: isIPFS[0]};
   }
 
   // Else, check if URI is https
