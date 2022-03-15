@@ -6,6 +6,7 @@ import { ethers } from "ethers"; // Ethers
 import FormData from "form-data"; // Data sending
 import { logger } from "./utils/logger"; // Logging
 import { ERC721ABI } from "./utils/constants"; // Constants
+import { EXTRegex } from "./utils/constants";
 import { promptVerifyContinue } from "./utils/prompt"; // Prompt
 import { collectURILocation, URILocation } from "./utils/metadata"; // Metadata helpers
 
@@ -189,7 +190,7 @@ export default class Flipper {
     // Get relevant paths
     const baseFolder: string = this.getDirectoryPath("original");
     const tokenMetadataPath: string = `${baseFolder}/${tokenId}.json`;
-    const tokenImagePath: string = `${baseFolder}/images/${tokenId}.bin`;
+    const tokenImagePath: string = `${baseFolder}/images/${tokenId}`;
 
     // Write metadata to JSON file
     await fs.writeFileSync(tokenMetadataPath, JSON.stringify(metadata, null, "\t"));
@@ -198,19 +199,20 @@ export default class Flipper {
     if (metadata["image"]) {
       // Collect image location and formatted URI
       const { loc, URI: imageURI } = collectURILocation(metadata["image"]);
-
+      const imageExt = metadata["image"].match(EXTRegex)[0];
       // Save image to disk based on location
       switch (loc) {
         // Case: IPFS
         case URILocation.IPFS:
+          console.log(metadata["image"]);
           await this.getAndSaveHTTPImage(
             this.IPFSGateway + imageURI,
-            tokenImagePath
+            tokenImagePath + imageExt
           );
           break;
         // Case: HTTPS
         case URILocation.HTTPS:
-          await this.getAndSaveHTTPImage(imageURI, tokenImagePath);
+          await this.getAndSaveHTTPImage(imageURI, tokenImagePath + imageExt);
           break;
       }
     }
@@ -382,17 +384,17 @@ export default class Flipper {
     await this.scrapeOriginalToken(this.lastScrapedToken + 1);
 
     // Post-processing (move metadata and flip images)
-    await this.postProcess(this.lastFlippedToken + 1);
+    //await this.postProcess(this.lastFlippedToken + 1);
 
     // Post-processing (give time to make manual modifications)
-    await promptVerifyContinue(
-      "You can make modify the flipped metadata now. Continue? (true/false)"
-    );
+    //await promptVerifyContinue(
+    //  "You can make modify the flipped metadata now. Continue? (true/false)"
+    //);
 
     // If provided Pinata token
-    if (this.pinataJWT) {
+    //if (this.pinataJWT) {
       // Upload new metadata to IPFS
-      await this.uploadMetadata(this.pinataJWT);
-    }
+    //  await this.uploadMetadata(this.pinataJWT);
+    //}
   }
 }

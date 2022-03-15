@@ -3,6 +3,10 @@
  * Pulls base hash + optional `/{tokenID}` suffix
  */
 export const IPFSRegex = RegExp("Qm[1-9A-Za-z]{43}[^OIl](/[0-9]+)?.*");
+/**
+ * @constant {RegExp} EXTRegex Gets file extension from URI
+ */
+export const EXTRegex = RegExp("(\\*.[^.]+)$")
 
 /**
  * @constant {string[]} ERC721ABI Human-readable ABI of select ERC721 functions

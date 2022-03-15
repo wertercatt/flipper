@@ -9,6 +9,8 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false
   }
 }
