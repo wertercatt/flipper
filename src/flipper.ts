@@ -6,7 +6,6 @@ import { ethers } from "ethers"; // Ethers
 import FormData from "form-data"; // Data sending
 import { logger } from "./utils/logger"; // Logging
 import { ERC721ABI } from "./utils/constants"; // Constants
-import { EXTRegex } from "./utils/constants";
 import { promptVerifyContinue } from "./utils/prompt"; // Prompt
 import { collectURILocation, URILocation } from "./utils/metadata"; // Metadata helpers
 
@@ -190,7 +189,7 @@ export default class Flipper {
     // Get relevant paths
     const baseFolder: string = this.getDirectoryPath("original");
     const tokenMetadataPath: string = `${baseFolder}/${tokenId}.json`;
-    const tokenImagePath: string = `${baseFolder}/images/${tokenId}`;
+    const tokenImagePath: string = `${baseFolder}/images/${tokenId}.bin`;
 
     // Write metadata to JSON file
     await fs.writeFileSync(tokenMetadataPath, JSON.stringify(metadata, null, "\t"));
@@ -199,20 +198,21 @@ export default class Flipper {
     if (metadata["image"]) {
       // Collect image location and formatted URI
       const { loc, URI: imageURI } = collectURILocation(metadata["image"]);
-      const imageExt = metadata["image"].match(EXTRegex)[0];
+//      const imageExt = metadata["image"].match(EXTRegex);
       // Save image to disk based on location
       switch (loc) {
         // Case: IPFS
         case URILocation.IPFS:
-          console.log(metadata["image"]);
+//          console.log(metadata["image"]);
+//	  console.log(imageExt);
           await this.getAndSaveHTTPImage(
             this.IPFSGateway + imageURI,
-            tokenImagePath + imageExt
+            tokenImagePath// + imageExt
           );
           break;
         // Case: HTTPS
         case URILocation.HTTPS:
-          await this.getAndSaveHTTPImage(imageURI, tokenImagePath + imageExt);
+          await this.getAndSaveHTTPImage(imageURI, tokenImagePath);
           break;
       }
     }
